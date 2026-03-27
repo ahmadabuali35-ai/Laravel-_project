@@ -1,66 +1,237 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
-
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+  <strong>Event Management API</strong><br>
+  <sub>Production-ready REST backend · Laravel · JWT</sub>
 </p>
 
-## About Laravel
+<p align="center">
+  <img src="https://img.shields.io/badge/PHP-8.2+-777BB4?style=flat-square&logo=php&logoColor=white" alt="PHP 8.2+">
+  <img src="https://img.shields.io/badge/Laravel-11.x-FF2D20?style=flat-square&logo=laravel&logoColor=white" alt="Laravel 11">
+  <img src="https://img.shields.io/badge/Auth-JWT-black?style=flat-square" alt="JWT">
+  <img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="License">
+</p>
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Project overview
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+**Event Management API** is a RESTful backend for managing events and attendee registrations. It exposes a clean JSON API secured with **JWT** (`tymon/jwt-auth`), layered architecture (controllers → services → validation), and owner-based authorization for event updates and deletes.
 
-## Learning Laravel
+Ideal as a foundation for mobile apps, SPAs, or microservices that need authenticated users, event CRUD, and many-to-many event registration.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## Features
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+| Area | Details |
+|------|---------|
+| **Authentication** | Register, login, logout, profile (`/me`) with JWT access tokens |
+| **Events** | Full CRUD; list with **pagination**, **title search**, **date filters** |
+| **Authorization** | Only the event **owner** can update or delete an event |
+| **Registrations** | Users register / unregister for events; **duplicate** registrations prevented |
+| **API design** | Consistent JSON: `{ "success", "data", "message" }` |
+| **Quality** | Form requests, API resources, policies, rate limits on auth routes |
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Requirements
 
-### Premium Partners
+- **PHP** 8.2+
+- **Composer** 2.x
+- **SQLite** (default) or MySQL / PostgreSQL
+- PHP extensions: `openssl`, `pdo`, `mbstring`, `tokenizer`, `xml`, `ctype`, `json`, `bcmath` (as required by Laravel)
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+---
 
-## Contributing
+## Installation & setup
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 1. Clone and install dependencies
 
-## Code of Conduct
+```bash
+git clone <your-repo-url> event-management-api
+cd event-management-api
+composer install
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 2. Environment
 
-## Security Vulnerabilities
+```bash
+cp .env.example .env
+php artisan key:generate
+php artisan jwt:secret
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Edit `.env` and set:
+
+- `APP_URL` — your app URL (e.g. `http://localhost:8000`)
+- **Database** — for SQLite, ensure the file exists:
+
+  ```bash
+  touch database/database.sqlite
+  ```
+
+  Or configure `DB_*` for MySQL/PostgreSQL.
+
+### 3. Database
+
+```bash
+php artisan migrate
+```
+
+### 4. (Optional) Development helpers
+
+```bash
+php artisan config:clear
+php artisan cache:clear
+```
+
+---
+
+## How to run
+
+### Local development (PHP built-in server)
+
+```bash
+php artisan serve
+```
+
+API base URL: **`http://127.0.0.1:8000/api`**
+
+### Docker (optional)
+
+If you use [Laravel Sail](https://laravel.com/docs/sail), after configuring Sail:
+
+```bash
+./vendor/bin/sail up -d
+./vendor/bin/sail artisan migrate
+```
+
+*(Adjust commands if your project uses a custom `docker-compose` setup.)*
+
+---
+
+## API reference (examples)
+
+All routes below are prefixed with `/api`. Send JSON with `Content-Type: application/json` where a body is shown.
+
+### Authentication (JWT)
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| `POST` | `/register` | No | Create account; returns user + `access_token` |
+| `POST` | `/login` | No | Returns `access_token` |
+| `POST` | `/logout` | Bearer JWT | Invalidate current token (blacklist) |
+| `GET` | `/me` | Bearer JWT | Current user profile |
+
+**Register**
+
+```bash
+curl -s -X POST http://127.0.0.1:8000/api/register \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Demo User","email":"demo@example.com","password":"password123","password_confirmation":"password123"}'
+```
+
+**Login**
+
+```bash
+curl -s -X POST http://127.0.0.1:8000/api/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"demo@example.com","password":"password123"}'
+```
+
+**Authenticated request** (replace `YOUR_JWT` with the `access_token` value)
+
+```bash
+curl -s http://127.0.0.1:8000/api/me \
+  -H "Authorization: Bearer YOUR_JWT" \
+  -H "Accept: application/json"
+```
+
+### Events (CRUD)
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| `GET` | `/events` | No | Paginated list; query: `search`, `date`, `date_from`, `date_to`, `per_page`, `page` |
+| `GET` | `/events/{id}` | No | Single event |
+| `POST` | `/events` | Bearer JWT | Create (you become owner) |
+| `PUT` / `PATCH` | `/events/{id}` | Bearer JWT | Update (**owner only**) |
+| `DELETE` | `/events/{id}` | Bearer JWT | Delete (**owner only**) |
+
+**List events (with filters)**
+
+```bash
+curl -s "http://127.0.0.1:8000/api/events?search=meetup&date_from=2025-06-01&per_page=10"
+```
+
+**Create event**
+
+```bash
+curl -s -X POST http://127.0.0.1:8000/api/events \
+  -H "Authorization: Bearer YOUR_JWT" \
+  -H "Content-Type: application/json" \
+  -d '{"title":"Laravel Meetup","description":"Networking","date":"2025-07-15 18:00:00","location":"Berlin"}'
+```
+
+### Event registration
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| `POST` | `/events/{id}/register` | Bearer JWT | Register current user |
+| `DELETE` | `/events/{id}/register` | Bearer JWT | Unregister |
+
+```bash
+curl -s -X POST http://127.0.0.1:8000/api/events/1/register \
+  -H "Authorization: Bearer YOUR_JWT" \
+  -H "Accept: application/json"
+```
+
+---
+
+## Screenshots & demos *(placeholders)*
+
+| Placeholder | Suggested content |
+|-------------|-------------------|
+| **Postman / Insomnia** | Export collection screenshot showing auth + events folders |
+| **Response sample** | Paste a successful `GET /api/events` JSON response |
+| **Architecture** | Simple diagram: Client → API → JWT → Services → DB |
+
+> Add your images under `docs/` or link a hosted demo when available.
+
+---
+
+## Project structure (high level)
+
+```
+app/
+├── Http/Controllers/Api/   # Thin controllers
+├── Http/Requests/          # Validation
+├── Http/Resources/         # JSON transformers
+├── Http/Responses/       # Unified API envelope
+├── Policies/               # Event ownership
+├── Services/               # Business logic
+└── Models/
+```
+
+---
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is open-sourced under the **MIT License**.
+
+---
+
+## Contact & portfolio *(optional)*
+
+| | |
+|---|--|
+| **Developer** | *[Your name or agency]* |
+| **Portfolio** | *[https://your-portfolio.com]* |
+| **Email** | *[your@email.com]* |
+| **Upwork / Fiverr** | *[Link to your profile]* |
+
+Replace the placeholders above with your real details when publishing.
+
+---
+
+<p align="center">
+  <sub>Built with Laravel · JWT · REST best practices</sub>
+</p>
